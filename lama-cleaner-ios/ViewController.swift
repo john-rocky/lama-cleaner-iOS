@@ -126,10 +126,12 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
                     print(inputImage.size)
                     image = self.mergeImageWithRect(image1: inputImage, image2: image, mergeRect: drawingRect)!
                 } else {
-                    guard let resultCGImage = self.ciContext.createCGImage(resultCIImage, from: resultCIImage.extent)?.resize(size: originalSize) else { fatalError() }
+                    guard let resultCGImage = self.ciContext.createCGImage(resultCIImage, from: resultCIImage.extent) else { fatalError() }
                     
-                    image = UIImage(cgImage: resultCGImage)
+                    image = UIImage(cgImage: resultCGImage).resize(size: originalSize)
                 }
+                print(originalSize)
+                print(image.size)
                 let timeElapsed = -start.timeIntervalSinceNow
                 print(timeElapsed)
                 
@@ -172,6 +174,15 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
             let recentImage = imagesSoFar.last!
             imageView.image = recentImage
             inputImage = recentImage
+        }
+        
+        if compareMode {
+            compareMode = false
+            compareSlider.isHidden = true
+            dummyKnobImageView.isHidden = true
+            drawingView.isHidden = false
+            compareButton.tintColor = .white
+            imageView.image = inputImage
         }
     }
     
@@ -222,20 +233,29 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
     
     @objc func compare(_ sender: UIButton) {
         if !compareMode {
-            compareMode = true
-            compareSlider.isHidden = false
-            dummyKnobImageView.isHidden = false
-            drawingView.isHidden = true
-            compareButton.tintColor = .yellow
+            setCompareMode()
             comparesSliderValueDidChange(compareSlider)
         } else {
-            compareMode = false
-            compareSlider.isHidden = true
-            dummyKnobImageView.isHidden = true
-            drawingView.isHidden = false
-            compareButton.tintColor = .white
+            resetCompareMode()
             imageView.image = inputImage
+
         }
+    }
+    
+    func setCompareMode() {
+        compareMode = true
+        compareSlider.isHidden = false
+        dummyKnobImageView.isHidden = false
+        drawingView.isHidden = true
+        compareButton.tintColor = .yellow
+    }
+    
+    func resetCompareMode() {
+        compareMode = false
+        compareSlider.isHidden = true
+        dummyKnobImageView.isHidden = true
+        drawingView.isHidden = false
+        compareButton.tintColor = .white
     }
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
@@ -252,6 +272,7 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
                         safeSelf.resetDrawingView()
                         safeSelf.imageView.image = correctOrientImage
                         safeSelf.adjustDrawingViewSize()
+                        safeSelf.resetCompareMode()
                     }
                 }
             }
@@ -383,17 +404,19 @@ enum InpaintingMode {
 //}
 extension UIImage {
     func resize(size _size: CGSize) -> UIImage? {
-        let widthRatio = _size.width / size.width
-        let heightRatio = _size.height / size.height
-        let ratio = widthRatio < heightRatio ? widthRatio : heightRatio
+        let aspectWidth = _size.width / size.width
+        let aspectHeight = _size.height / size.height
+        let aspectRatio = min(aspectWidth, aspectHeight)
 
-        let resizedSize = CGSize(width: size.width * ratio, height: size.height * ratio)
+        let scaledWidth = size.width * aspectWidth
+        let scaledHeight = size.height * aspectHeight
 
-        UIGraphicsBeginImageContextWithOptions(resizedSize, false, 0.0) // 変更
-        draw(in: CGRect(origin: .zero, size: resizedSize))
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: scaledWidth, height: scaledHeight), false, 0.0)
+        draw(in: CGRect(x: 0, y: 0, width: scaledWidth, height: scaledHeight))
         let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 
         return resizedImage
     }
 }
+
