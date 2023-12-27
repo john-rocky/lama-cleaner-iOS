@@ -7,7 +7,9 @@
 <div align="center">A free and open-source iOS inpainting tool powered by SOTA AI model.</div>
 <div align="center">iPhone/iPad version of lama cleaner.</div>
 
+<div align="center">
 <img src=https://github.com/john-rocky/PersonSegmentationSampler/assets/23278992/d356e29d-b52c-41eb-ab8a-fa2326c4b55f width=400>
+</div>
 
 ## Quick Start
 
