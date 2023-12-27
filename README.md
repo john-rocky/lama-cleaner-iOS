@@ -4,4 +4,4 @@
 
 # <div align="center">lama-cleaner-iOS</div>
 
-<div align="center">iPhone/iPad version of lama cleaner</div>
+<div align="center">A free and open-source iOS inpainting tool powered by SOTA AI model.iPhone/iPad version of lama cleaner</div>
