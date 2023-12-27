@@ -16,6 +16,8 @@ extension ViewController {
     }
     
     func setupView() {
+        superResolutionButton.isHidden = true
+        
         view.backgroundColor = .black
         imageView.backgroundColor = .clear
         imageView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height * 0.7)
@@ -32,6 +34,7 @@ extension ViewController {
         undoButton.frame = CGRect(x: view.center.x - buttonWidth/2, y: view.bounds.maxY - buttonAreaHeight/2, width: buttonWidth, height: buttonHeight)
         selectPhotoButton.frame = CGRect(x: undoButton.frame.minX - buttonWidth - 20, y:  view.bounds.maxY - buttonAreaHeight/2, width: buttonWidth, height: buttonHeight)
         superResolutionButton.frame = CGRect(x: undoButton.frame.maxX+20, y: view.bounds.maxY - buttonAreaHeight/2, width: buttonWidth, height: buttonHeight)
+        compareButton.frame = CGRect(x: undoButton.frame.maxX+20, y: view.bounds.maxY - buttonAreaHeight/2, width: buttonWidth, height: buttonHeight)
         saveButton.frame = CGRect(x: superResolutionButton.frame.maxX + 20, y: view.bounds.maxY - buttonAreaHeight/2, width: buttonWidth, height: buttonHeight)
         let brushSliderWidth = view.bounds.width * 0.6
         brushLabel.frame = CGRect(x: view.bounds.width * 0.05, y: view.bounds.maxY - buttonAreaHeight/2 - buttonHeight - 20, width: view.bounds.width * 0.2, height: buttonHeight)
@@ -42,11 +45,15 @@ extension ViewController {
         undoButton.setImage(UIImage(systemName: "arrowshape.turn.up.left.fill"), for: .normal)
         selectPhotoButton.setImage(UIImage(systemName: "photo"), for: .normal)
         saveButton.setImage(UIImage(systemName: "tray.and.arrow.down.fill"), for: .normal)
-
+        compareSlider.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: buttonHeight)
+        dummyKnobImageView.frame = CGRect(x: 0, y: 0, width: buttonHeight * 0.6, height: buttonHeight * 0.6)
+        compareButton.setImage(UIImage(systemName: "eye"), for: .normal)
         superResolutionButton.setTitle("SR", for: .normal)
+        dummyKnobImageView.image = UIImage(systemName: "arrow.left.and.right.square")
         
         undoButton.tintColor = .white
         saveButton.tintColor = .white
+        compareButton.tintColor = .white
         selectPhotoButton.tintColor = .white
         superResolutionButton.setTitleColor(.white, for: .normal)
 
@@ -56,7 +63,7 @@ extension ViewController {
         saveButton.backgroundColor = .clear
 
         view.addSubview(selectPhotoButton)
-        view.addSubview(superResolutionButton)
+        view.addSubview(compareButton)
         view.addSubview(undoButton)
         view.addSubview(saveButton)
         view.addSubview(segmentedControl)
@@ -64,6 +71,11 @@ extension ViewController {
 
         view.addSubview(brushLabel)
         view.addSubview(brushSlider)
+        view.addSubview(dummyKnobImageView)
+
+        view.addSubview(compareSlider)
+        
+        
         segmentedControl.selectedSegmentTintColor = .yellow
         inpaintModeLabel.text = "Input"
         inpaintModeLabel.textAlignment = .center
@@ -75,6 +87,14 @@ extension ViewController {
         brushLabel.text = "Brush"
         brushLabel.textColor = .white
         brushLabel.textAlignment = .center
+        
+        compareSlider.setThumbImage(UIImage(), for: .normal)
+        compareSlider.thumbTintColor = .clear
+        compareSlider.minimumTrackTintColor = .clear
+        compareSlider.maximumTrackTintColor = .clear
+        dummyKnobImageView.tintColor = .yellow
+
+
         adjustDrawingViewSize()
     }
 

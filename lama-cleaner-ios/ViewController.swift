@@ -15,7 +15,7 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
     var imageView = UIImageView()
     let drawingView = DrawingView()
     let undoButton = UIButton()
-    let runButton = UIButton()
+    let compareButton = UIButton()
     let selectPhotoButton =  UIButton()
     let superResolutionButton = UIButton()
     let saveButton = UIButton()
@@ -23,7 +23,9 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
     let brushLabel = UILabel()
     let segmentedControl = UISegmentedControl(items: ["Whole image", "Crop ROI"])
     let inpaintModeLabel = UILabel()
+    let compareSlider = UISlider()
     var pulsatingAnimation: CABasicAnimation?
+    let dummyKnobImageView = UIImageView()
 
     lazy var model: LaMa? = {
         do {
@@ -56,7 +58,8 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
     private var inputImage: UIImage?
     private let ciContext = CIContext()
     private var imagesSoFar:[UIImage] = []
-
+    private var compareMode = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         inputImage = UIImage(named: "input")
@@ -66,12 +69,18 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
         drawingView.delegate = self
         drawingView.setLineWidth(40)
         selectPhotoButton.addTarget(self, action: #selector(presentPhPicker), for: .touchUpInside)
-        superResolutionButton.addTarget(self, action: #selector(sr), for: .touchUpInside)
+        compareButton.addTarget(self, action: #selector(compare), for: .touchUpInside)
         saveButton.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
         undoButton.addTarget(self, action: #selector(undoInpainting), for: .touchUpInside)
         brushSlider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged), for: .valueChanged)
+        compareSlider.addTarget(self, action: #selector(comparesSliderValueDidChange), for: .valueChanged)
+        compareSlider.minimumValue = 0.001
+        compareSlider.maximumValue = 0.999
+        compareSlider.value = 0.5
         segmentedControl.selectedSegmentIndex = 0
+        compareSlider.isHidden = true
+        dummyKnobImageView.isHidden = true
     }
     
     func inference(maskedImage inputImage:UIImage, maskImage mask:UIImage) {
@@ -111,7 +120,8 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
                     
                     image = UIImage(cgImage: resultCGImage)
 
-                    image = image.resized(toSize: drawingRect.size)!
+//                    image = image.resized(toSize: drawingRect.size)!
+                    image = image.resize(size: drawingRect.size)
                     print(image.size)
                     print(inputImage.size)
                     image = self.mergeImageWithRect(image1: inputImage, image2: image, mergeRect: drawingRect)!
@@ -210,6 +220,24 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
         }
     }
     
+    @objc func compare(_ sender: UIButton) {
+        if !compareMode {
+            compareMode = true
+            compareSlider.isHidden = false
+            dummyKnobImageView.isHidden = false
+            drawingView.isHidden = true
+            compareButton.tintColor = .yellow
+            comparesSliderValueDidChange(compareSlider)
+        } else {
+            compareMode = false
+            compareSlider.isHidden = true
+            dummyKnobImageView.isHidden = true
+            drawingView.isHidden = false
+            compareButton.tintColor = .white
+            imageView.image = inputImage
+        }
+    }
+    
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true)
         guard let result = results.first else { return }
@@ -264,6 +292,9 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
             let aspect = imageSize.width / imageSize.height
             drawingView.frame = CGRect(x: imageView.center.x - (imageView.frame.height * aspect / 2), y: imageView.frame.minY, width: imageView.frame.height * aspect, height: imageView.frame.height)
         }
+        compareSlider.center = imageView.center
+        dummyKnobImageView.center.y = compareSlider.center.y
+        dummyKnobImageView.center.x = imageView.frame.width * CGFloat(compareSlider.value)
     }
     
     func mergeImages(image1: UIImage, image2: UIImage, mergeRect: CGRect) -> UIImage? {
@@ -301,6 +332,38 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
     func drawingViewDidFinishDrawing(_ drawingView: DrawingView) {
         run()
     }
+    
+    @objc func comparesSliderValueDidChange(_ sender: UISlider) {
+        let image1 = inputImage!
+        let image2 = imagesSoFar.first!
+        let value = sender.value
+        let leftPercentage = CGFloat(value)
+        let rightPercentage = CGFloat(1 - value)
+        
+        let image1Width = image1.size.width * leftPercentage
+        let image2Width = image2.size.width * rightPercentage
+        
+        let image1Rect = CGRect(x: 0, y: 0, width: image1Width, height: image1.size.height)
+        let croppedImage1 = cropImage(image: image1, rect: image1Rect)
+        
+        let image2Rect = CGRect(x: image1.size.width - image2Width, y: 0, width: image2Width, height: image1.size.height)
+        let croppedImage2 = cropImage(image: image2, rect: image2Rect)
+        let lineXPosition = CGFloat(value) * image1.size.width
+
+        let renderer = UIGraphicsImageRenderer(size: image1.size)
+        let combinedImage = renderer.image { context in
+            croppedImage1!.draw(in: image1Rect)
+            croppedImage2!.draw(in: image2Rect)
+            let lineColor = UIColor.yellow.withAlphaComponent(0.5)
+            lineColor.set()
+            context.cgContext.move(to: CGPoint(x: lineXPosition, y: 0))
+            context.cgContext.addLine(to: CGPoint(x: lineXPosition, y: image1.size.height))
+            context.cgContext.setLineWidth(5)
+            context.cgContext.strokePath()
+        }
+        dummyKnobImageView.center.x = imageView.frame.width * CGFloat(compareSlider.value)
+        imageView.image = combinedImage
+    }
 }
 
 enum InpaintingMode {
@@ -308,11 +371,29 @@ enum InpaintingMode {
     case cropROI
 }
 
+//extension UIImage {
+//    func resized(toSize newSize: CGSize) -> UIImage? {
+//        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+//        defer { UIGraphicsEndImageContext() }
+//        self.draw(in: CGRect(origin: .zero, size: newSize))
+//        return UIGraphicsGetImageFromCurrentImageContext()
+//    }
+//
+//
+//}
 extension UIImage {
-    func resized(toSize newSize: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        defer { UIGraphicsEndImageContext() }
-        self.draw(in: CGRect(origin: .zero, size: newSize))
-        return UIGraphicsGetImageFromCurrentImageContext()
+    func resize(size _size: CGSize) -> UIImage? {
+        let widthRatio = _size.width / size.width
+        let heightRatio = _size.height / size.height
+        let ratio = widthRatio < heightRatio ? widthRatio : heightRatio
+
+        let resizedSize = CGSize(width: size.width * ratio, height: size.height * ratio)
+
+        UIGraphicsBeginImageContextWithOptions(resizedSize, false, 0.0) // 変更
+        draw(in: CGRect(origin: .zero, size: resizedSize))
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return resizedImage
     }
 }
