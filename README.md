@@ -22,3 +22,13 @@
 4, Run the xcode project.
 
 
+## Thanks
+Model Repository:
+[advimman/lama](https://github.com/advimman/lama)
+
+Concersion Script:
+[mallman/CoreMLaMa](https://github.com/mallman/CoreMLaMa)
+
+Inspired by:
+[Sanster/lama-cleaner](https://github.com/Sanster/lama-cleaner)
+
