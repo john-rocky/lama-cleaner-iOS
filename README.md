@@ -14,7 +14,7 @@
 ## Quick Start
 
 1, Clone this repository.
-2, Download Lama.mlpackage from [CoreML-Models](https://github.com/john-rocky/CoreML-Models).
+2, Download Lama.mlpackage from [CoreML-Models](https://github.com/john-rocky/CoreML-Models/tree/master?tab=readme-ov-file#lama).
 3, Run the xcode project.
 
 
