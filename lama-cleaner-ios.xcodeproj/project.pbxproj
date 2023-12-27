@@ -16,6 +16,10 @@
 		73AA95BA2B3BDCBF002530C4 /* lama_cleaner_iosTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95B92B3BDCBF002530C4 /* lama_cleaner_iosTests.swift */; };
 		73AA95C42B3BDCBF002530C4 /* lama_cleaner_iosUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95C32B3BDCBF002530C4 /* lama_cleaner_iosUITests.swift */; };
 		73AA95C62B3BDCBF002530C4 /* lama_cleaner_iosUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95C52B3BDCBF002530C4 /* lama_cleaner_iosUITestsLaunchTests.swift */; };
+		73AA95D52B3BDCE2002530C4 /* CoreMLHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95D22B3BDCE2002530C4 /* CoreMLHelpers.swift */; };
+		73AA95D62B3BDCE2002530C4 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95D32B3BDCE2002530C4 /* DrawingView.swift */; };
+		73AA95D72B3BDCE2002530C4 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95D42B3BDCE2002530C4 /* View.swift */; };
+		73AA95D92B3BDCE9002530C4 /* realesrgangeneral512.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 73AA95D82B3BDCE9002530C4 /* realesrgangeneral512.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,10 @@
 		73AA95BF2B3BDCBF002530C4 /* lama-cleaner-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "lama-cleaner-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		73AA95C32B3BDCBF002530C4 /* lama_cleaner_iosUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lama_cleaner_iosUITests.swift; sourceTree = "<group>"; };
 		73AA95C52B3BDCBF002530C4 /* lama_cleaner_iosUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lama_cleaner_iosUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		73AA95D22B3BDCE2002530C4 /* CoreMLHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreMLHelpers.swift; sourceTree = "<group>"; };
+		73AA95D32B3BDCE2002530C4 /* DrawingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		73AA95D42B3BDCE2002530C4 /* View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		73AA95D82B3BDCE9002530C4 /* realesrgangeneral512.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = realesrgangeneral512.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +110,10 @@
 				73AA95A22B3BDCBE002530C4 /* AppDelegate.swift */,
 				73AA95A42B3BDCBE002530C4 /* SceneDelegate.swift */,
 				73AA95A62B3BDCBE002530C4 /* ViewController.swift */,
+				73AA95D22B3BDCE2002530C4 /* CoreMLHelpers.swift */,
+				73AA95D32B3BDCE2002530C4 /* DrawingView.swift */,
+				73AA95D42B3BDCE2002530C4 /* View.swift */,
+				73AA95D82B3BDCE9002530C4 /* realesrgangeneral512.mlmodel */,
 				73AA95A82B3BDCBE002530C4 /* Main.storyboard */,
 				73AA95AB2B3BDCBF002530C4 /* Assets.xcassets */,
 				73AA95AD2B3BDCBF002530C4 /* LaunchScreen.storyboard */,
@@ -260,7 +272,11 @@
 			files = (
 				73AA95A72B3BDCBE002530C4 /* ViewController.swift in Sources */,
 				73AA95A32B3BDCBE002530C4 /* AppDelegate.swift in Sources */,
+				73AA95D72B3BDCE2002530C4 /* View.swift in Sources */,
+				73AA95D92B3BDCE9002530C4 /* realesrgangeneral512.mlmodel in Sources */,
+				73AA95D62B3BDCE2002530C4 /* DrawingView.swift in Sources */,
 				73AA95A52B3BDCBE002530C4 /* SceneDelegate.swift in Sources */,
+				73AA95D52B3BDCE2002530C4 /* CoreMLHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
