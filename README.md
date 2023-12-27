@@ -4,5 +4,4 @@
 
 # <div align="center">lama-cleaner-iOS</div>
 
-
-iPhone/iPad version of lama cleaner
+<div align="center">iPhone/iPad version of lama cleaner</div>
