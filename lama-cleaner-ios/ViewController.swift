@@ -30,7 +30,7 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
     lazy var model: LaMa? = {
         do {
             let config = MLModelConfiguration()
-            config.computeUnits = .cpuAndGPU
+//            config.computeUnits = .cpuAndGPU
             let model = try LaMa(configuration: config)
             return model
         } catch let error {
@@ -128,7 +128,11 @@ class ViewController: UIViewController,PHPickerViewControllerDelegate, UIPickerV
                 } else {
                     guard let resultCGImage = self.ciContext.createCGImage(resultCIImage, from: resultCIImage.extent) else { fatalError() }
                     
-                    image = UIImage(cgImage: resultCGImage).resize(size: originalSize)
+                    let resultImage = UIImage(cgImage: resultCGImage).resize(size: originalSize)
+                    guard let croppedResultImage = self.cropImage(image: resultImage!, rect: drawingRect)else { fatalError() }
+                    image = self.mergeImageWithRect(image1: inputImage, image2: croppedResultImage, mergeRect: drawingRect)!
+
+                    
                 }
                 print(originalSize)
                 print(image.size)
