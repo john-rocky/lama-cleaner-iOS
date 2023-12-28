@@ -13,8 +13,22 @@
 
 ## Quick Start
 
-1, Clone this repository.
-2, Download Lama.mlpackage from [CoreML-Models](https://github.com/john-rocky/CoreML-Models/tree/master?tab=readme-ov-file#lama).
-3, Run the xcode project.
+1, Clone this repository(xcode project).
 
+2, Download LaMa.mlpackage from [CoreML-Models](https://github.com/john-rocky/CoreML-Models/tree/master?tab=readme-ov-file#lama).
+
+3, Drag and drop LaMa.mlpackage to the xcode project.
+
+4, Run the xcode project.
+
+
+## Thanks
+Model Repository:
+[advimman/lama](https://github.com/advimman/lama)
+
+Concersion Script:
+[mallman/CoreMLaMa](https://github.com/mallman/CoreMLaMa)
+
+Inspired by:
+[Sanster/lama-cleaner](https://github.com/Sanster/lama-cleaner)
 
